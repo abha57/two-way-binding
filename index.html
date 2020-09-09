@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Two way data bind</title>
+    <style>
+      .field {
+        padding: 10px;
+        margin: 0;
+        border-bottom: 2px solid;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="field">
+      <label for="">
+        Name:
+        <input type="text" data-bind="name" />
+      </label>
+      <span data-bind="name"></span>
+    </div>
+
+    <div class="field">
+      <label for=""
+        >Surname:
+        <input type="text" data-bind="surname" />
+      </label>
+      <span data-bind="surname"></span>
+    </div>
+
+    <script src="./observer.js"></script>
+    <script>
+      const dataBindObserver = new Observer();
+      const elements = document.querySelectorAll('[data-bind]');
+      elements.forEach(element => {
+        if (!element.type) {
+          const stateVar = element.getAttribute('data-bind');
+          dataBindObserver.addObserver(state => {
+            if (state[stateVar]) {
+              element.innerHTML = state[stateVar];
+            }
+          });
+        }
+      });
+      elements.forEach(element => {
+        if (element.type) {
+          element.addEventListener('input', function(event) {
+            const stateVar = element.getAttribute('data-bind');
+            const value = event.target.value;
+            dataBindObserver.updateState({
+              [stateVar]: value
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
