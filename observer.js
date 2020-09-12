@@ -1,15 +1,26 @@
 // observer pattern
 
+const initialState = {
+  name: 'This is the  initial state.',
+  surname: 'This is the initial state.'
+};
+
 const Observer = function() {
   this.observers = [];
   this.state = {};
   this.updateState = updateObj => {
-    Object.keys(updateObj).map(key => {
+    if (Object.keys(updateObj).length === 0) {
       this.state = {
-        ...this.state,
-        [key]: updateObj[key]
+        ...initialState
       };
-    });
+    } else {
+      Object.keys(updateObj).map(key => {
+        this.state = {
+          ...this.state,
+          [key]: updateObj[key]
+        };
+      });
+    }
     this.notifyObservers();
   };
   this.notifyObservers = () => {

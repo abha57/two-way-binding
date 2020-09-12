@@ -30,16 +30,26 @@
       <span data-bind="surname"></span>
     </div>
 
+    <div>
+      <button onclick="resetAll()">Reset all</button>
+    </div>
+
     <script src="./observer.js"></script>
     <script>
       const dataBindObserver = new Observer();
       const elements = document.querySelectorAll('[data-bind]');
       elements.forEach(element => {
+        const stateVar = element.getAttribute('data-bind');
         if (!element.type) {
-          const stateVar = element.getAttribute('data-bind');
           dataBindObserver.addObserver(state => {
             if (state[stateVar]) {
               element.innerHTML = state[stateVar];
+            }
+          });
+        } else {
+          dataBindObserver.addObserver(state => {
+            if (state[stateVar]) {
+              element.value = state[stateVar];
             }
           });
         }
@@ -55,6 +65,9 @@
           });
         }
       });
+      const resetAll = () => {
+        dataBindObserver.updateState({});
+      };
     </script>
   </body>
 </html>
