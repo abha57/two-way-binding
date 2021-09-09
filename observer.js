@@ -1,13 +1,13 @@
 // observer pattern
 
 const initialState = {
-  name: 'This is the  initial state.',
-  surname: 'This is the initial state.'
+  name: 'apaar',
+  surname: 'bhatnagar'
 };
 
 const Observer = function() {
   this.observers = [];
-  this.state = {};
+  this.state = { ...initialState };
   this.updateState = updateObj => {
     if (Object.keys(updateObj).length === 0) {
       this.state = {
@@ -37,9 +37,14 @@ const Observer = function() {
       this.observers.splice(index, 1);
     };
   };
+
+  this.getState = () => {
+    return this.state;
+  }
   return {
     updateState: this.updateState,
     notifyObservers: this.notifyObservers,
-    addObserver: this.addObserver
+    addObserver: this.addObserver,
+    getState: this.getState
   };
 };

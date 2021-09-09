@@ -37,36 +37,78 @@
     <script src="./observer.js"></script>
     <script>
       const dataBindObserver = new Observer();
-      const elements = document.querySelectorAll('[data-bind]');
-      elements.forEach(element => {
-        const stateVar = element.getAttribute('data-bind');
-        if (!element.type) {
-          dataBindObserver.addObserver(state => {
+      const elements = document.querySelectorAll("[data-bind]");
+      const init = () => {
+        elements.forEach((element) => {
+        const stateVar = element.getAttribute("data-bind");
+        const state = dataBindObserver.getState();
+        if (element.type) {
+          if (state[stateVar]) {
+            element.value = state[stateVar];
+          }
+          element.addEventListener("input", function (event) {
+            const stateVar = element.getAttribute("data-bind");
+            const value = event.target.value;
+            dataBindObserver.updateState({
+              [stateVar]: value,
+            });
+          });
+        } else {
+          if (state[stateVar]) {
+            element.innerHTML = state[stateVar];
+          }
+          dataBindObserver.addObserver((state) => {
             if (state[stateVar]) {
               element.innerHTML = state[stateVar];
             }
           });
-        } else {
-          dataBindObserver.addObserver(state => {
-            if (state[stateVar]) {
-              element.value = state[stateVar];
-            }
-          });
+        
         }
       });
-      elements.forEach(element => {
-        if (element.type) {
-          element.addEventListener('input', function(event) {
-            const stateVar = element.getAttribute('data-bind');
-            const value = event.target.value;
-            dataBindObserver.updateState({
-              [stateVar]: value
-            });
-          });
-        }
-      });
+      }
+      init();
+      // elements.forEach((element) => {
+      //   const stateVar = element.getAttribute("data-bind");
+      //   const state = dataBindObserver.getState();
+      //   if (element.type) {
+      //     if (state[stateVar]) {
+      //       element.value = state[stateVar];
+      //     }
+      //   }
+      // });
+      // elements.forEach((element) => {
+      //   const stateVar = element.getAttribute("data-bind");
+      //   if (!element.type) {
+      //     dataBindObserver.addObserver((state) => {
+      //       if (state[stateVar]) {
+      //         element.innerHTML = state[stateVar];
+      //       }
+      //     });
+      //   }
+      // });
+      // elements.forEach((element) => {
+      //   if (element.type) {
+      //     element.addEventListener("input", function (event) {
+      //       const stateVar = element.getAttribute("data-bind");
+      //       const value = event.target.value;
+      //       dataBindObserver.updateState({
+      //         [stateVar]: value,
+      //       });
+      //     });
+      //   }
+      // });
       const resetAll = () => {
         dataBindObserver.updateState({});
+        // elements.forEach((element) => {
+        //   const stateVar = element.getAttribute("data-bind");
+        //   const state = dataBindObserver.getState();
+        //   if (element.type) {
+        //     if (state[stateVar]) {
+        //       element.value = state[stateVar];
+        //     }
+        //   }
+        // });
+        init();
       };
     </script>
   </body>
